@@ -1,0 +1,97 @@
+import { NextRequest, NextResponse } from "next/server";
+
+const SYSTEM_PROMPT = `You are an expert real estate investment analyst specializing in Central Arkansas residential properties. The user runs a real estate investment LLC buying properties in Central Arkansas for fix-and-flip, long-term rental, and owner finance resale.
+
+Respond ONLY with a valid JSON object — no preamble, no markdown, no extra text.
+
+Use your deep knowledge of Central Arkansas markets (Little Rock, North Little Rock, Maumelle, Conway, Benton, Bryant, Jacksonville, Sherwood, Cabot, etc.) to estimate ARV, rental rates, and values.
+
+Return this exact JSON:
+{
+  "address": "<full address>",
+  "city": "<city>",
+  "zip": "<zip>",
+  "price": <number>,
+  "beds": <number>,
+  "baths": <number>,
+  "sqft": <number>,
+  "yearBuilt": <number or null>,
+  "dom": <number or null>,
+  "neighborhood": "<neighborhood>",
+  "verdict": "GO" or "NO-GO" or "MAYBE",
+  "dealScore": <0-100>,
+  "scoreBreakdown": { "discountToARV": <0-30>, "rentalYield": <0-20>, "rehabRisk": <0-15>, "daysOnMarket": <0-10>, "sellerMotivation": <0-15>, "neighborhoodStrength": <0-10> },
+  "verdictReason": "<2 sentence plain English verdict>",
+  "arv": { "estimate": <number>, "lowEnd": <number>, "highEnd": <number>, "pricePerSqft": <number>, "confidence": "High"|"Medium"|"Low", "basis": "<1 sentence>" },
+  "rehab": { "condition": "Cosmetic"|"Light"|"Medium"|"Heavy", "costLow": <number>, "costHigh": <number>, "keyItems": ["<item>","<item>"] },
+  "motivation": { "score": <1-10>, "flags": ["<phrase>"], "assessment": "<1 sentence>" },
+  "mao": { "flip": <number>, "rental": <number>, "ownerFinance": <number> },
+  "flip": { "viable": <bool>, "estimatedProfit": <number>, "roi": <number>, "timelineMonths": <number>, "verdict": "<1 sentence>" },
+  "rental": { "viable": <bool>, "marketRent": <number>, "monthlyCashFlow": <number>, "capRate": <number>, "verdict": "<1 sentence>" },
+  "ownerFinance": { "viable": <bool>, "resalePrice": <number>, "monthlyPayment": <number>, "netProfit": <number>, "verdict": "<1 sentence>" },
+  "topStrategy": "flip"|"rental"|"ownerFinance",
+  "topStrategyReason": "<1 sentence>",
+  "greenFlags": ["<flag>"],
+  "redFlags": ["<flag>"],
+  "negotiationTips": ["<tip>","<tip>","<tip>"],
+  "nextSteps": ["<step>","<step>","<step>"]
+}`;
+
+export async function POST(req: NextRequest) {
+  try {
+    const { listing, maoFlip, maoRental, maoOF } = await req.json();
+
+    if (!listing || typeof listing !== "string") {
+      return NextResponse.json({ error: "Missing listing text" }, { status: 400 });
+    }
+
+    const apiKey = process.env.ANTHROPIC_API_KEY;
+    if (!apiKey) {
+      return NextResponse.json({ error: "API key not configured" }, { status: 500 });
+    }
+
+    const response = await fetch("https://api.anthropic.com/v1/messages", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "x-api-key": apiKey,
+        "anthropic-version": "2023-06-01",
+      },
+      body: JSON.stringify({
+        model: "claude-sonnet-4-20250514",
+        max_tokens: 1000,
+        system: SYSTEM_PROMPT,
+        messages: [
+          {
+            role: "user",
+            content: `Analyze this Central Arkansas investment property and return JSON only. Use MAO targets: Flip=${maoFlip}%, Rental=${maoRental}%, OwnerFinance=${maoOF}%.\n\n${listing}`,
+          },
+        ],
+      }),
+    });
+
+    if (!response.ok) {
+      const err = await response.text();
+      return NextResponse.json({ error: `Claude API error: ${err}` }, { status: 500 });
+    }
+
+    const data = await response.json();
+    const text = data.content?.find((b: { type: string }) => b.type === "text")?.text || "";
+    const clean = text.replace(/```json|```/g, "").trim();
+    const parsed = JSON.parse(clean);
+
+    // Recalculate MAO server-side with current slider values
+    if (parsed.arv?.estimate && parsed.rehab?.costHigh) {
+      parsed.mao = {
+        flip: Math.round((parsed.arv.estimate * maoFlip) / 100 - parsed.rehab.costHigh),
+        rental: Math.round((parsed.arv.estimate * maoRental) / 100 - parsed.rehab.costHigh),
+        ownerFinance: Math.round((parsed.arv.estimate * maoOF) / 100 - parsed.rehab.costHigh),
+      };
+    }
+
+    return NextResponse.json(parsed);
+  } catch (err) {
+    console.error("Analysis error:", err);
+    return NextResponse.json({ error: "Analysis failed. Check your listing text and try again." }, { status: 500 });
+  }
+}
