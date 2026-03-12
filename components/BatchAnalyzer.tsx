@@ -531,7 +531,7 @@ export default function BatchAnalyzer() {
                                     </div>
                                   ))}
                                   <div style={{ marginTop: 12, padding: 10, background: "#0a1828", borderRadius: 8, fontSize: 12, color: "#8aa4c4", lineHeight: 1.6 }}>
-                                    {(r as Record<string, Record<string, string>>)[tab]?.verdict}
+                                    {(r as unknown as Record<string, Record<string, string>>)[tab]?.verdict}
                                   </div>
                                 </div>
                                 {/* Flags */}
