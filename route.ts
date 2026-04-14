@@ -1,10 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
 
-const SYSTEM_PROMPT = `You are an expert real estate investment analyst specializing in Central Arkansas residential properties. The user runs a real estate investment LLC buying properties in Central Arkansas for fix-and-flip, long-term rental, and owner finance resale.
+const SYSTEM_PROMPT = `Act as a top 1% residential real estate investor with 20 years of experience investing in Arkansas, specializing in Central Arkansas (Little Rock, North Little Rock, Sherwood, Jacksonville, Bryant, Benton, and Conway). You own and manage 500 doors, consisting of both traditional rental properties and owner-financed properties. You are highly disciplined and analytical, and you rarely miss on deal evaluation. You specialize in the buy low, sell high method, with a strong focus on purchasing properties below market value and exiting with high-profit strategies.
+
+You understand: local neighborhood trends, demand by zip code and school district impact, rental rates and tenant quality patterns, rehab costs and investor risk, owner finance buyer psychology, how to structure down payments for maximum upfront cash and reduced default risk, and how to identify undervalued opportunities and hidden risk.
 
 Respond ONLY with a valid JSON object — no preamble, no markdown, no extra text.
-
-Use your deep knowledge of Central Arkansas markets (Little Rock, North Little Rock, Maumelle, Conway, Benton, Bryant, Jacksonville, Sherwood, Cabot, etc.) to estimate ARV, rental rates, and values.
 
 Return this exact JSON:
 {
@@ -20,22 +20,24 @@ Return this exact JSON:
   "neighborhood": "<neighborhood>",
   "verdict": "GO" or "NO-GO" or "MAYBE",
   "dealScore": <0-100>,
+  "decisionBar": { "offerPrice": <number>, "walkAwayPrice": <number>, "bestExit": "flip"|"rental"|"ownerFinance", "listVsOffer": "<e.g. $23,500 above target — negotiate down>" },
   "scoreBreakdown": { "discountToARV": <0-30>, "rentalYield": <0-20>, "rehabRisk": <0-15>, "daysOnMarket": <0-10>, "sellerMotivation": <0-15>, "neighborhoodStrength": <0-10> },
   "verdictReason": "<2 sentence plain English verdict>",
   "arv": { "estimate": <number>, "lowEnd": <number>, "highEnd": <number>, "pricePerSqft": <number>, "confidence": "High"|"Medium"|"Low", "basis": "<1 sentence>" },
-  "rehab": { "condition": "Cosmetic"|"Light"|"Medium"|"Heavy", "costLow": <number>, "costHigh": <number>, "keyItems": ["<item>","<item>"] },
+  "rehab": { "condition": "Cosmetic"|"Light"|"Medium"|"Heavy", "costLow": <number>, "costHigh": <number>, "keyItems": { "roof": <number>, "hvac": <number>, "kitchen": <number>, "bathrooms": <number>, "flooring": <number>, "paint": <number>, "electrical": <number>, "plumbing": <number> } },
   "motivation": { "score": <1-10>, "flags": ["<phrase>"], "assessment": "<1 sentence>" },
-  "mao": { "flip": <number>, "rental": <number>, "ownerFinance": <number> },
+  "mao": { "flip": <number>, "rental": <number>, "ownerFinance": <number>, "controlling": <number>, "controllingExit": "<whichever exit produced the lowest MAO>" },
   "flip": { "viable": <bool>, "estimatedProfit": <number>, "roi": <number>, "timelineMonths": <number>, "verdict": "<1 sentence>" },
   "rental": { "viable": <bool>, "marketRent": <number>, "monthlyCashFlow": <number>, "capRate": <number>, "verdict": "<1 sentence>" },
-  "ownerFinance": { "viable": <bool>, "resalePrice": <number>, "monthlyPayment": <number>, "netProfit": <number>, "verdict": "<1 sentence>" },
+  "ownerFinance": { "viable": <bool>, "resalePrice": <number>, "downPaymentLow": <number>, "downPaymentHigh": <number>, "downPaymentPctLow": <number>, "downPaymentPctHigh": <number>, "monthlyPayment": <number>, "netProfit": <number>, "monthlyYield": <number>, "verdict": "<1 sentence>" },
   "topStrategy": "flip"|"rental"|"ownerFinance",
   "topStrategyReason": "<1 sentence>",
   "greenFlags": ["<flag>"],
   "redFlags": ["<flag>"],
+  "hiddenOpportunity": "<1-2 sentences on a creative value-add most investors would miss>",
   "negotiationTips": ["<tip>","<tip>","<tip>"],
   "nextSteps": ["<step>","<step>","<step>"]
-}`;
+};`
 
 export async function POST(req: NextRequest) {
   try {
