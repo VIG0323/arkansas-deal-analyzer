@@ -482,8 +482,10 @@ export default function BatchAnalyzer() {
                         <tr key={`expand-${r._index}`} style={{ borderBottom: "1px solid #0e1c2e" }}>
                           <td colSpan={12} style={{ padding: 0, background: "#070e1c" }}>
                             <div className="expand-row" style={{ padding: "20px 20px 24px" }}>
-                              <div style={{ display: "flex", gap: 6, marginBottom: 18, borderBottom: "1px solid #162840", paddingBottom: 14 }}
-                                {r.decisionBar && (
+                            <div style={{ display: "flex", gap: 6, marginBottom: 18, borderBottom: "1px solid #162840", paddingBottom: 14 }}>
+                              </div>
+                              {r.decisionBar && (
+                            
                           <div style={{ display: "flex", gap: 16, alignItems: "center", padding: "10px 16px", background: "#040c18", border: "1px solid #1e3a5f", borderRadius: 8, marginBottom: 16, flexWrap: "wrap" }}>
                             <div style={{ fontSize: 10, color: "#3a5a7a", letterSpacing: ".1em", fontWeight: 700 }}>DECISION</div>
                             <div style={{ display: "flex", gap: 6, alignItems: "center" }}>
