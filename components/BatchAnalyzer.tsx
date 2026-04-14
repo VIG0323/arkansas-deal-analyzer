@@ -98,7 +98,7 @@ interface AnalysisResult {
   arv: { estimate: number; lowEnd: number; highEnd: number; pricePerSqft: number; confidence: string; basis: string };
   rehab: { condition: string; costLow: number; costHigh: number; keyItems: string[] };
   motivation: { score: number; flags: string[]; assessment: string };
-  mao: { flip: number; rental: number; ownerFinance: number };
+  mao: { flip: number; rental: number; ownerFinance: number; controlling: number; controllingExit: string };
   flip: { viable: boolean; estimatedProfit: number; roi: number; timelineMonths: number; verdict: string };
   rental: { viable: boolean; marketRent: number; monthlyCashFlow: number; capRate: number; verdict: string };
  ownerFinance: { viable: boolean; resalePrice: number; downPaymentLow: number; downPaymentHigh: number; downPaymentPctLow: number; downPaymentPctHigh: number; monthlyPayment: number; netProfit: number; monthlyYield: number; verdict: string };
