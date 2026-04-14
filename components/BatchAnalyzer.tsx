@@ -519,12 +519,15 @@ export default function BatchAnalyzer() {
                                       <span style={{ fontSize: 13, fontWeight: 700, color: row.accent || (row.hi ? "#60a5fa" : "#dce8f8"), fontFamily: "'JetBrains Mono'" }}>{row.v}</span>
                                     </div>
                                   ))}
-                                  {tab === "ownerFinance" && [
-                                    { l: "Resale Price", v: fmt(r.ownerFinance?.resalePrice), hi: true },
-                                    { l: "Buyer Payment", v: fmt(r.ownerFinance?.monthlyPayment) + "/mo" },
-                                    { l: "Net Profit", v: fmt(r.ownerFinance?.netProfit), accent: "#fbbf24" },
-                                    { l: "OF MAO", v: fmt(r.mao?.ownerFinance) },
-                                  ].map((row, j) => (
+                              {tab === "ownerFinance" && [
+  { l: "Resale Price", v: fmt(r.ownerFinance?.resalePrice), hi: true },
+  { l: "Down Payment (Low)", v: fmt(r.ownerFinance?.downPaymentLow) + ` (${r.ownerFinance?.downPaymentPctLow ?? 0}%)`, accent: "#10b981" },
+  { l: "Down Payment (High)", v: fmt(r.ownerFinance?.downPaymentHigh) + ` (${r.ownerFinance?.downPaymentPctHigh ?? 0}%)`, accent: "#10b981" },
+  { l: "Buyer Payment", v: fmt(r.ownerFinance?.monthlyPayment) + "/mo" },
+  { l: "Monthly Yield", v: pct(r.ownerFinance?.monthlyYield) },
+  { l: "Net Profit", v: fmt(r.ownerFinance?.netProfit), accent: "#fbbf24" },
+  { l: "Controlling MAO", v: fmt(r.mao?.controlling), hi: true },
+].map((row, j) => (
                                     <div key={j} style={{ display: "flex", justifyContent: "space-between", padding: "7px 0", borderBottom: "1px solid #111e2e" }}>
                                       <span style={{ fontSize: 12, color: "#6a8aaa" }}>{row.l}</span>
                                       <span style={{ fontSize: 13, fontWeight: 700, color: row.accent || (row.hi ? "#60a5fa" : "#dce8f8"), fontFamily: "'JetBrains Mono'" }}>{row.v}</span>
