@@ -26,10 +26,10 @@ Return this exact JSON:
   "arv": { "estimate": <number>, "lowEnd": <number>, "highEnd": <number>, "pricePerSqft": <number>, "confidence": "High"|"Medium"|"Low", "basis": "<1 sentence>" },
   "rehab": { "condition": "Cosmetic"|"Light"|"Medium"|"Heavy", "costLow": <number>, "costHigh": <number>, "keyItems": { "roof": <number>, "hvac": <number>, "kitchen": <number>, "bathrooms": <number>, "flooring": <number>, "paint": <number>, "electrical": <number>, "plumbing": <number> } },
   "motivation": { "score": <1-10>, "flags": ["<phrase>"], "assessment": "<1 sentence>" },
-  "mao": { "flip": <number>, "rental": <number>, "ownerFinance": <number>, "controlling": <number>, "controllingExit": "<whichever exit produced the lowest MAO>" },
+  "mao": { "flip": <number>, "rental": <number>, "ownerFinance": <number>, "controlling": <number>, "controllingExit": "<string>" }
   "flip": { "viable": <bool>, "estimatedProfit": <number>, "roi": <number>, "timelineMonths": <number>, "verdict": "<1 sentence>" },
   "rental": { "viable": <bool>, "marketRent": <number>, "monthlyCashFlow": <number>, "capRate": <number>, "verdict": "<1 sentence>" },
-  "ownerFinance": { "viable": <bool>, "resalePrice": <number>, "downPaymentLow": <number>, "downPaymentHigh": <number>, "downPaymentPctLow": <number>, "downPaymentPctHigh": <number>, "monthlyPayment": <number>, "netProfit": <number>, "monthlyYield": <number>, "verdict": "<1 sentence>" },
+  "ownerFinance": { "viable": <bool>, "resalePrice": <number>, "downPaymentLow": <number>, "downPaymentHigh": <number>, "downPaymentPctLow": <number>, "downPaymentPctHigh": <number>, "monthlyPayment": <number>, "netProfit": <number>, "monthlyYield": <number>, "verdict": "<1 sentence>" }
   "topStrategy": "flip"|"rental"|"ownerFinance",
   "topStrategyReason": "<1 sentence>",
   "greenFlags": ["<flag>"],
