@@ -108,8 +108,8 @@ interface AnalysisResult {
   redFlags: string[];
   negotiationTips: string[];
   nextSteps: string[];
+  decisionBar: { offerPrice: number; walkAwayPrice: number; bestExit: string; listVsOffer: string };
 }
-
 // ─── MAIN COMPONENT ───────────────────────────────────────────────────────────
 export default function BatchAnalyzer() {
   const [mode, setMode] = useState<"paste" | "csv">("paste");
