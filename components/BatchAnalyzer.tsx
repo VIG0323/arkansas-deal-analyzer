@@ -101,7 +101,7 @@ interface AnalysisResult {
   mao: { flip: number; rental: number; ownerFinance: number; controlling: number; controllingExit: string };
   flip: { viable: boolean; estimatedProfit: number; roi: number; timelineMonths: number; verdict: string };
   rental: { viable: boolean; marketRent: number; monthlyCashFlow: number; capRate: number; verdict: string };
- ownerFinance: { viable: boolean; resalePrice: number; downPaymentLow: number; downPaymentHigh: number; downPaymentPctLow: number; downPaymentPctHigh: number; monthlyPayment: number; netProfit: number; monthlyYield: number; verdict: string };
+  ownerFinance: { viable: boolean; resalePrice: number; downPaymentLow: number; downPaymentHigh: number; downPaymentPctLow: number; downPaymentPctHigh: number; monthlyPayment: number; netProfit: number; monthlyYield: number; verdict: string };
   topStrategy: string;
   topStrategyReason: string;
   greenFlags: string[];
@@ -110,6 +110,7 @@ interface AnalysisResult {
   nextSteps: string[];
   decisionBar: { offerPrice: number; walkAwayPrice: number; bestExit: string; listVsOffer: string };
 }
+
 // ─── MAIN COMPONENT ───────────────────────────────────────────────────────────
 export default function BatchAnalyzer() {
   const [mode, setMode] = useState<"paste" | "csv">("paste");
@@ -257,7 +258,7 @@ export default function BatchAnalyzer() {
           <div style={{ width: 34, height: 34, background: "linear-gradient(135deg,#1d4ed8,#0ea5e9)", borderRadius: 9, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 16, fontWeight: 900 }}>⬡</div>
           <div>
             <div style={{ fontWeight: 800, fontSize: 16, letterSpacing: "-0.02em" }}>Arkansas Deal Analyzer</div>
-            <div style={{ fontSize: 10, color: "#3a5a7a", letterSpacing: ".08em" }}>AI-POWERED · CENTRAL ARKANSAS</div>
+            <div style={{ fontSize: 10, color: "#3a5a7a", letterSpacing: ".08em" }}>AI-POWERED · CENTRAL ARKANSAS · VIG PROPERTIES</div>
           </div>
         </div>
         <div style={{ display: "flex", gap: 16, alignItems: "center" }}>
@@ -482,30 +483,32 @@ export default function BatchAnalyzer() {
                         <tr key={`expand-${r._index}`} style={{ borderBottom: "1px solid #0e1c2e" }}>
                           <td colSpan={12} style={{ padding: 0, background: "#070e1c" }}>
                             <div className="expand-row" style={{ padding: "20px 20px 24px" }}>
-                            <div style={{ display: "flex", gap: 6, marginBottom: 18, borderBottom: "1px solid #162840", paddingBottom: 14 }}>
-                              </div>
+
+                              {/* DECISION BAR */}
                               {r.decisionBar && (
-                            
-                          <div style={{ display: "flex", gap: 16, alignItems: "center", padding: "10px 16px", background: "#040c18", border: "1px solid #1e3a5f", borderRadius: 8, marginBottom: 16, flexWrap: "wrap" }}>
-                            <div style={{ fontSize: 10, color: "#3a5a7a", letterSpacing: ".1em", fontWeight: 700 }}>DECISION</div>
-                            <div style={{ display: "flex", gap: 6, alignItems: "center" }}>
-                              <span style={{ fontSize: 11, color: "#6a8aaa" }}>Offer</span>
-                              <span style={{ fontSize: 15, fontWeight: 900, color: "#10b981", fontFamily: "'JetBrains Mono'" }}>{fmt(r.decisionBar?.offerPrice)}</span>
-                            </div>
-                            <div style={{ color: "#1e3a5f" }}>|</div>
-                            <div style={{ display: "flex", gap: 6, alignItems: "center" }}>
-                              <span style={{ fontSize: 11, color: "#6a8aaa" }}>Walk Away</span>
-                              <span style={{ fontSize: 15, fontWeight: 900, color: "#f87171", fontFamily: "'JetBrains Mono'" }}>{fmt(r.decisionBar?.walkAwayPrice)}</span>
-                            </div>
-                            <div style={{ color: "#1e3a5f" }}>|</div>
-                            <div style={{ display: "flex", gap: 6, alignItems: "center" }}>
-                              <span style={{ fontSize: 11, color: "#6a8aaa" }}>Best Exit</span>
-                              <span style={{ fontSize: 13, fontWeight: 700, color: STRAT_COLOR[r.decisionBar?.bestExit] }}>{STRAT_LABEL[r.decisionBar?.bestExit]}</span>
-                            </div>
-                            <div style={{ marginLeft: "auto", fontSize: 11, color: "#fbbf24" }}>{r.decisionBar?.listVsOffer}</div>
-                          </div>
-                        )}
-                                 {["flip", "rental", "ownerFinance"].map((s) => (
+                                <div style={{ display: "flex", gap: 16, alignItems: "center", padding: "10px 16px", background: "#040c18", border: "1px solid #1e3a5f", borderRadius: 8, marginBottom: 16, flexWrap: "wrap" }}>
+                                  <div style={{ fontSize: 10, color: "#3a5a7a", letterSpacing: ".1em", fontWeight: 700 }}>DECISION</div>
+                                  <div style={{ display: "flex", gap: 6, alignItems: "center" }}>
+                                    <span style={{ fontSize: 11, color: "#6a8aaa" }}>Offer</span>
+                                    <span style={{ fontSize: 15, fontWeight: 900, color: "#10b981", fontFamily: "'JetBrains Mono'" }}>{fmt(r.decisionBar?.offerPrice)}</span>
+                                  </div>
+                                  <div style={{ color: "#1e3a5f" }}>|</div>
+                                  <div style={{ display: "flex", gap: 6, alignItems: "center" }}>
+                                    <span style={{ fontSize: 11, color: "#6a8aaa" }}>Walk Away</span>
+                                    <span style={{ fontSize: 15, fontWeight: 900, color: "#f87171", fontFamily: "'JetBrains Mono'" }}>{fmt(r.decisionBar?.walkAwayPrice)}</span>
+                                  </div>
+                                  <div style={{ color: "#1e3a5f" }}>|</div>
+                                  <div style={{ display: "flex", gap: 6, alignItems: "center" }}>
+                                    <span style={{ fontSize: 11, color: "#6a8aaa" }}>Best Exit</span>
+                                    <span style={{ fontSize: 13, fontWeight: 700, color: STRAT_COLOR[r.decisionBar?.bestExit] }}>{STRAT_LABEL[r.decisionBar?.bestExit]}</span>
+                                  </div>
+                                  <div style={{ marginLeft: "auto", fontSize: 11, color: "#fbbf24" }}>{r.decisionBar?.listVsOffer}</div>
+                                </div>
+                              )}
+
+                              {/* TABS */}
+                              <div style={{ display: "flex", gap: 6, marginBottom: 18, borderBottom: "1px solid #162840", paddingBottom: 14 }}>
+                                {["flip", "rental", "ownerFinance"].map((s) => (
                                   <button key={s} className="tab"
                                     onClick={(e) => { e.stopPropagation(); setActiveTab((t) => ({ ...t, [r._index]: s })); }}
                                     style={{ color: tab === s ? "white" : "#4a6a8a", background: tab === s ? STRAT_COLOR[s] + "22" : "none", border: tab === s ? `1px solid ${STRAT_COLOR[s]}50` : "1px solid transparent" }}>
@@ -514,6 +517,7 @@ export default function BatchAnalyzer() {
                                 ))}
                                 <div style={{ marginLeft: "auto", fontSize: 12, color: "#6a8aaa" }}>{r.arv?.basis}</div>
                               </div>
+
                               <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 20 }}>
                                 {/* Numbers */}
                                 <div style={{ background: "#060e1a", border: "1px solid #162840", borderRadius: 10, padding: 16 }}>
@@ -521,7 +525,7 @@ export default function BatchAnalyzer() {
                                   {tab === "flip" && [
                                     { l: "MAO (Flip)", v: fmt(r.mao?.flip), hi: true },
                                     { l: "Rehab Range", v: `${fmt(r.rehab?.costLow)} – ${fmt(r.rehab?.costHigh)}` },
-                                    { l: `Timeline`, v: `~${r.flip?.timelineMonths || "—"} months` },
+                                    { l: "Timeline", v: `~${r.flip?.timelineMonths || "—"} months` },
                                     { l: "Est. Net Profit", v: fmt(r.flip?.estimatedProfit), accent: "#10b981" },
                                     { l: "ROI", v: pct(r.flip?.roi), accent: "#10b981" },
                                   ].map((row, j) => (
@@ -541,10 +545,10 @@ export default function BatchAnalyzer() {
                                       <span style={{ fontSize: 13, fontWeight: 700, color: row.accent || (row.hi ? "#60a5fa" : "#dce8f8"), fontFamily: "'JetBrains Mono'" }}>{row.v}</span>
                                     </div>
                                   ))}
-                              {tab === "ownerFinance" && [
+                                  {tab === "ownerFinance" && [
                                     { l: "Resale Price", v: fmt(r.ownerFinance?.resalePrice), hi: true },
-                                    { l: "Down Payment (Low)", v: fmt(r.ownerFinance?.downPaymentLow) + ` (${r.ownerFinance?.downPaymentPctLow ?? 0}%)`, accent: "#10b981" },
-                                    { l: "Down Payment (High)", v: fmt(r.ownerFinance?.downPaymentHigh) + ` (${r.ownerFinance?.downPaymentPctHigh ?? 0}%)`, accent: "#10b981" },
+                                    { l: "Down Pmt (Low)", v: `${fmt(r.ownerFinance?.downPaymentLow)} (${r.ownerFinance?.downPaymentPctLow ?? 0}%)`, accent: "#10b981" },
+                                    { l: "Down Pmt (High)", v: `${fmt(r.ownerFinance?.downPaymentHigh)} (${r.ownerFinance?.downPaymentPctHigh ?? 0}%)`, accent: "#10b981" },
                                     { l: "Buyer Payment", v: fmt(r.ownerFinance?.monthlyPayment) + "/mo" },
                                     { l: "Monthly Yield", v: pct(r.ownerFinance?.monthlyYield) },
                                     { l: "Net Profit", v: fmt(r.ownerFinance?.netProfit), accent: "#fbbf24" },
@@ -559,17 +563,21 @@ export default function BatchAnalyzer() {
                                     {(r as unknown as Record<string, Record<string, string>>)[tab]?.verdict}
                                   </div>
                                 </div>
+
                                 {/* Flags */}
                                 <div style={{ background: "#060e1a", border: "1px solid #162840", borderRadius: 10, padding: 16 }}>
                                   <div style={{ fontSize: 10, color: "#3a5a7a", letterSpacing: ".1em", textTransform: "uppercase", marginBottom: 12, fontWeight: 600 }}>Flags & Signals</div>
                                   {r.greenFlags?.map((f, j) => <div key={j} style={{ fontSize: 11, color: "#6ee7b7", background: "#021a0e", border: "1px solid #065f46", borderRadius: 5, padding: "3px 9px", display: "inline-block", marginRight: 5, marginBottom: 5 }}>✓ {f}</div>)}
                                   {r.redFlags?.map((f, j) => <div key={j} style={{ fontSize: 11, color: "#fca5a5", background: "#1a0505", border: "1px solid #7f1d1d", borderRadius: 5, padding: "3px 9px", display: "inline-block", marginRight: 5, marginBottom: 5 }}>⚠ {f}</div>)}
-                                  {r.motivation?.flags?.length > 0 && <>
-                                    <div style={{ fontSize: 10, color: "#3a5a7a", marginTop: 8, marginBottom: 6 }}>MOTIVATION</div>
-                                    {r.motivation.flags.map((f, j) => <div key={j} style={{ fontSize: 11, color: "#fcd34d", background: "#1a1000", border: "1px solid #78350f", borderRadius: 5, padding: "3px 9px", display: "inline-block", marginRight: 5, marginBottom: 5 }}>⚡ {f}</div>)}
-                                  </>}
+                                  {r.motivation?.flags?.length > 0 && (
+                                    <>
+                                      <div style={{ fontSize: 10, color: "#3a5a7a", marginTop: 8, marginBottom: 6 }}>MOTIVATION</div>
+                                      {r.motivation.flags.map((f, j) => <div key={j} style={{ fontSize: 11, color: "#fcd34d", background: "#1a1000", border: "1px solid #78350f", borderRadius: 5, padding: "3px 9px", display: "inline-block", marginRight: 5, marginBottom: 5 }}>⚡ {f}</div>)}
+                                    </>
+                                  )}
                                   <div style={{ marginTop: 12, fontSize: 12, color: "#8aa4c4", lineHeight: 1.6 }}>{r.verdictReason}</div>
                                 </div>
+
                                 {/* Next Steps */}
                                 <div style={{ background: "#060e1a", border: "1px solid #162840", borderRadius: 10, padding: 16 }}>
                                   <div style={{ fontSize: 10, color: "#3a5a7a", letterSpacing: ".1em", textTransform: "uppercase", marginBottom: 12, fontWeight: 600 }}>Next Steps</div>
