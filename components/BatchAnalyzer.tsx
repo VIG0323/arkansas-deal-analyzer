@@ -101,7 +101,7 @@ interface AnalysisResult {
   mao: { flip: number; rental: number; ownerFinance: number };
   flip: { viable: boolean; estimatedProfit: number; roi: number; timelineMonths: number; verdict: string };
   rental: { viable: boolean; marketRent: number; monthlyCashFlow: number; capRate: number; verdict: string };
-  ownerFinance: { viable: boolean; resalePrice: number; monthlyPayment: number; netProfit: number; verdict: string };
+ ownerFinance: { viable: boolean; resalePrice: number; downPaymentLow: number; downPaymentHigh: number; downPaymentPctLow: number; downPaymentPctHigh: number; monthlyPayment: number; netProfit: number; monthlyYield: number; verdict: string };
   topStrategy: string;
   topStrategyReason: string;
   greenFlags: string[];
