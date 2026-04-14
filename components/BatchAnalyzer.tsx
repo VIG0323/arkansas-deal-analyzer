@@ -482,8 +482,28 @@ export default function BatchAnalyzer() {
                         <tr key={`expand-${r._index}`} style={{ borderBottom: "1px solid #0e1c2e" }}>
                           <td colSpan={12} style={{ padding: 0, background: "#070e1c" }}>
                             <div className="expand-row" style={{ padding: "20px 20px 24px" }}>
-                              <div style={{ display: "flex", gap: 6, marginBottom: 18, borderBottom: "1px solid #162840", paddingBottom: 14 }}>
-                                {["flip", "rental", "ownerFinance"].map((s) => (
+                              <div style={{ display: "flex", gap: 6, marginBottom: 18, borderBottom: "1px solid #162840", paddingBottom: 14 }}
+                                {r.decisionBar && (
+                          <div style={{ display: "flex", gap: 16, alignItems: "center", padding: "10px 16px", background: "#040c18", border: "1px solid #1e3a5f", borderRadius: 8, marginBottom: 16, flexWrap: "wrap" }}>
+                            <div style={{ fontSize: 10, color: "#3a5a7a", letterSpacing: ".1em", fontWeight: 700 }}>DECISION</div>
+                            <div style={{ display: "flex", gap: 6, alignItems: "center" }}>
+                              <span style={{ fontSize: 11, color: "#6a8aaa" }}>Offer</span>
+                              <span style={{ fontSize: 15, fontWeight: 900, color: "#10b981", fontFamily: "'JetBrains Mono'" }}>{fmt(r.decisionBar?.offerPrice)}</span>
+                            </div>
+                            <div style={{ color: "#1e3a5f" }}>|</div>
+                            <div style={{ display: "flex", gap: 6, alignItems: "center" }}>
+                              <span style={{ fontSize: 11, color: "#6a8aaa" }}>Walk Away</span>
+                              <span style={{ fontSize: 15, fontWeight: 900, color: "#f87171", fontFamily: "'JetBrains Mono'" }}>{fmt(r.decisionBar?.walkAwayPrice)}</span>
+                            </div>
+                            <div style={{ color: "#1e3a5f" }}>|</div>
+                            <div style={{ display: "flex", gap: 6, alignItems: "center" }}>
+                              <span style={{ fontSize: 11, color: "#6a8aaa" }}>Best Exit</span>
+                              <span style={{ fontSize: 13, fontWeight: 700, color: STRAT_COLOR[r.decisionBar?.bestExit] }}>{STRAT_LABEL[r.decisionBar?.bestExit]}</span>
+                            </div>
+                            <div style={{ marginLeft: "auto", fontSize: 11, color: "#fbbf24" }}>{r.decisionBar?.listVsOffer}</div>
+                          </div>
+                        )}
+                                 {["flip", "rental", "ownerFinance"].map((s) => (
                                   <button key={s} className="tab"
                                     onClick={(e) => { e.stopPropagation(); setActiveTab((t) => ({ ...t, [r._index]: s })); }}
                                     style={{ color: tab === s ? "white" : "#4a6a8a", background: tab === s ? STRAT_COLOR[s] + "22" : "none", border: tab === s ? `1px solid ${STRAT_COLOR[s]}50` : "1px solid transparent" }}>
@@ -520,14 +540,14 @@ export default function BatchAnalyzer() {
                                     </div>
                                   ))}
                               {tab === "ownerFinance" && [
-  { l: "Resale Price", v: fmt(r.ownerFinance?.resalePrice), hi: true },
-  { l: "Down Payment (Low)", v: fmt(r.ownerFinance?.downPaymentLow) + ` (${r.ownerFinance?.downPaymentPctLow ?? 0}%)`, accent: "#10b981" },
-  { l: "Down Payment (High)", v: fmt(r.ownerFinance?.downPaymentHigh) + ` (${r.ownerFinance?.downPaymentPctHigh ?? 0}%)`, accent: "#10b981" },
-  { l: "Buyer Payment", v: fmt(r.ownerFinance?.monthlyPayment) + "/mo" },
-  { l: "Monthly Yield", v: pct(r.ownerFinance?.monthlyYield) },
-  { l: "Net Profit", v: fmt(r.ownerFinance?.netProfit), accent: "#fbbf24" },
-  { l: "Controlling MAO", v: fmt(r.mao?.controlling), hi: true },
-].map((row, j) => (
+                                    { l: "Resale Price", v: fmt(r.ownerFinance?.resalePrice), hi: true },
+                                    { l: "Down Payment (Low)", v: fmt(r.ownerFinance?.downPaymentLow) + ` (${r.ownerFinance?.downPaymentPctLow ?? 0}%)`, accent: "#10b981" },
+                                    { l: "Down Payment (High)", v: fmt(r.ownerFinance?.downPaymentHigh) + ` (${r.ownerFinance?.downPaymentPctHigh ?? 0}%)`, accent: "#10b981" },
+                                    { l: "Buyer Payment", v: fmt(r.ownerFinance?.monthlyPayment) + "/mo" },
+                                    { l: "Monthly Yield", v: pct(r.ownerFinance?.monthlyYield) },
+                                    { l: "Net Profit", v: fmt(r.ownerFinance?.netProfit), accent: "#fbbf24" },
+                                    { l: "Controlling MAO", v: fmt(r.mao?.controlling), hi: true },
+                                  ].map((row, j) => (
                                     <div key={j} style={{ display: "flex", justifyContent: "space-between", padding: "7px 0", borderBottom: "1px solid #111e2e" }}>
                                       <span style={{ fontSize: 12, color: "#6a8aaa" }}>{row.l}</span>
                                       <span style={{ fontSize: 13, fontWeight: 700, color: row.accent || (row.hi ? "#60a5fa" : "#dce8f8"), fontFamily: "'JetBrains Mono'" }}>{row.v}</span>
